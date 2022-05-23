@@ -6,13 +6,15 @@ This project is for studying the relation between earthquake density and the app
 ##
 WORKFLOW: ./Mainshock-Aftershock Clusters. 
 
-FOLDERS. 
+FOLDERS  
+
 	data:  
 		qtm_b0.8_mc1_d1.6.txt (declustering result)
 			NUMBER YEAR MONTH DAY HOUR MINUTE SECOND LATITUDE LONTITUDE DEPTH MAGNITUDE TYPE ClusterID EventID. 
 	
 		sc_FM.txt (focal mechanism information). 
-			Time (in MATLAB datenum), Lat, Lon, Dep, Mag, Strike1, Strike2, Dip1, Dip2, Rake1, Rake2. 
+			Time (in MATLAB datenum), Lat, Lon, Dep, Mag, Strike1, Strike2, Dip1, Dip2, Rake1, Rake2  
+			
 	
 
 	code:  
@@ -27,22 +29,27 @@ FOLDERS.
 STEPs  
 1: FMD analysis for magnitude distribution (codes description in the following)
 
-2: NND analysis for earthquake clustering (codes description in the following)
+2: NND analysis for earthquake clustering (codes description in the following)  
+
 	outputfile example: data/qtm_b0.8_mc1_d1.6.txt
 
 3: Data arrangement:
-	PreData.m
-	outputfile: output/qtm_2D.mat
+	
+	PreData.m  
+	outputfile: output/qtm_2D.mat  
 
 4: Calculate static stresses caused by mainshocks (codes description in the following and in the manuscript)
+	
 	qtm2D.py     
-	outputfile example: output/qtm_2D_CFS0.mat
+	outputfile example: output/qtm_2D_CFS0.mat  
 
-5: Dynamic stress, density 
+5: Dynamic stress, density   
+	
 	ComputeDensity.m
 	outputfile example: output/qtm_dens_0.mat
 
-6: Bin the applied stresses, gaussian fit for data in each bin, display the result (ex.m)
+6: Bin the applied stresses, gaussian fit for data in each bin, display the result  
+	
 	run_fit_qtm.m
 
 
@@ -50,7 +57,8 @@ STEPs
 ##
 WORKFLOW: ./indSeism
 
-FOLDERS
+FOLDERS  
+
 	data:
 		info_Paralana.mat
 			Time Lon Lat Dep Mag	
