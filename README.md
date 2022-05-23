@@ -8,7 +8,7 @@ WORKFLOW: ./Mainshock-Aftershock Clusters.
 
 FOLDERS. 
 	data:  
-		qtm_b0.8_mc1_d1.6.txt (declustering result). 
+		qtm_b0.8_mc1_d1.6.txt (declustering result)
 			NUMBER YEAR MONTH DAY HOUR MINUTE SECOND LATITUDE LONTITUDE DEPTH MAGNITUDE TYPE ClusterID EventID. 
 	
 		sc_FM.txt (focal mechanism information). 
@@ -21,7 +21,7 @@ FOLDERS.
 		RadialThreeDNND.m (compute 3D radial density)
 		calP_window.m (bin stress, fit density with Gaussian distritbuion)
 		ConfidenceInter.m (determine confidence interval)
-		FitSlope_error.m (fit slopes)
+		FitSlope_error.m (fit slopes). 
 
 
 STEPs  
