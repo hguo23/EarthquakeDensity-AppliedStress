@@ -91,7 +91,7 @@ for i = 1:Nt
         if strcmp(PoroType,'iso')
             dStrain_tmp = poro_strain_iso(r(i), vt(k), vQ(k), D, alpha, G, lambda, lambda_u);
         elseif strcmp(PoroType,'axi')
-            dStrain_tmp = poro_strain_axi(d(i), 0, vt(k), vQ(k), D, Ss, b, rho_w, g, alpha, G, lambda);
+            dStrain_tmp = poro_strain_axi(d(i), 0, vt(k), vQ(k), D, b, alpha, G, lambda, lambda_u);
         end
         dStrain = dStrain+dStrain_tmp;
     end
@@ -102,7 +102,7 @@ for i = 1:Nt
     elseif strcmp(PoroType,'axi')
         [Srr,Stt,Skk] = strain_to_stress_axi(dStrain,Pp, G, nu, alpha);
     end
-    mSrr(i) = -Srr;
+    mSrr(i) = -Srr; % make compressional stress to be positive
     mStt(i) = -Stt;
     mSkk(i) = -Skk; 
 end
@@ -120,8 +120,11 @@ for i = 1:Nt
     end
     
     sigma = [mSrr(i) 0 0;0 mStt(i) 0; 0 0 mSkk(i)];
+    %% local stress state to NE
     R1 = NorToGeo(pi/2-angd(i),0,-angz(i));
     SG = R1'*sigma*R1;
+    
+    %% NE project to Coulomb stress, coefficient of friction is 0.5
     [nn, ns, nd] = CoordVec(stk, dp, rk);
     t = SG*nn;
     td = t'*nd;
