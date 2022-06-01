@@ -57,7 +57,7 @@ for i = 1:length(r)
                     Vs2  = V02-V1-V2;
                 end
             end
-            eqdens(i) = ktmp/(Vs1-Vs2);
+            eqdens(i) = ktmp/(Vs1-Vs2)/t(i);
         end
     end
 end
