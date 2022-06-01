@@ -22,10 +22,12 @@ Rec_ori = Rec;
 Nboot = 1; % bootstrapping number
 for n = 0 :Nboot-1
     n
+    %% load files
     Rec = Rec_ori;
     output = ['output/qtm_dens_',num2str(n),'.mat'];
     sta = load(['output/qtm_2D_CFS',num2str(n),'.mat']);
-    %%
+    
+    %% load static stress output
     R1 = [sta.R1(1:l(1));sta.R1(1:l(1))];
     R2 = [sta.R2(1:l(1));sta.R2(1:l(1))];
     R1 = reshape(R1, 1, size(R1,1)*size(R1,2));
@@ -49,7 +51,8 @@ for n = 0 :Nboot-1
         Rec_ori(i).erry = sta.Erry(i);
         Rec_ori(i).errz = sta.Errz(i);        
     end
-
+    
+    %% process
     for i = 1:N        
         MainMag = Rec_ori(i).MainMag;   
         MainLat = Rec_ori(i).MainLat;
@@ -58,6 +61,9 @@ for n = 0 :Nboot-1
         lat = Rec_ori(i).lat;
         lon = Rec_ori(i).lon;
         dep = Rec_ori(i).dep;
+        dt = Rec_ori(i).t - Rec_ori(i).MainT; % time to the mainshock
+        
+        %% distances and errors
         dx = sign(lon'-MainLon).*lldistkm([MainLat MainLon],[lat'*0+MainLat lon']);
         dy = sign(lat'-MainLat).*lldistkm([MainLat MainLon],[lat' lon'*0+MainLon]);
         errx0 = Rec_ori(i).errx;
@@ -72,30 +78,33 @@ for n = 0 :Nboot-1
         r = sqrt(d.^2+(dep-MainDep+errdep-errz0).^2);        
         R = Rec(i).R;
 
+        %% stresses
+        strc = Rec(i).strc;  % static stress           
+        PGV = 10.^(-2.29+0.85*MainMag-1.29*log10(R)-2);        
+        dyn = PGV/3.5e3*3e10; % dynamic stress
+        
+        %% inner and outer boundary
         r0 = 0.01*10^(0.44*MainMag)*3; % 3 times rupture length as the minimum distance
         R0 = 50; % 50 km as the maximum distance
                 
-        strc = Rec(i).strc;  % static stress           
-
-        PGV = 10.^(-2.29+0.85*0-1.29*log10(R)-2);        
-        dyn = PGV/3.5e3*3e10; % normalized dynamic stress
-
-        eqd = RadialThreeDNND(1,R,r,MainDep,30); % earthquake density
-        eqdn = eqd/length(r); % normalized earthquake density
+        I = dt<10; % aftershocks occur in 10 days
+        dt = dt(I);
+        r = r(I);
         
-        I = R>r0 & R<R0 & ~isnan(eqd) & ~isinf(eqd) & eqd>0; 
-        eqd = eqd(I);
-        strc = strc(I);
-
-        I = R>r0 & R<R0 & ~isnan(eqdn) & ~isinf(eqdn) & eqdn>0; 
-        eqdn = eqdn(I);
-        dyn = dyn(I);
+        %% density computing
+        if ~isempty(r)
+            eqd = RadialThreeDNND(1,R,r,MainDep,30)/max(dt); % earthquake density
         
-        Rec(i).MainMag = MainMag;
-        Rec(i).sts = strc;       
-        Rec(i).dys = dyn;
-        Rec(i).eqd = eqd;
-        Rec(i).eqdn = eqdn;      
+            I = R>r0 & R<R0 & ~isnan(eqd) & ~isinf(eqd) & eqd>0; 
+            eqd = eqd(I);
+            strc = strc(I);
+            dyn = dyn(I);
+        
+            Rec(i).MainMag = MainMag;
+            Rec(i).sts = strc;       
+            Rec(i).dys = dyn;
+            Rec(i).eqd = eqd;
+        end
     end
     save(output, 'Rec');
 end
