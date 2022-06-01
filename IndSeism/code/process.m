@@ -59,6 +59,7 @@ angz = atan2(dz,d);
 
 %% k-means earthquake density
 eqdens = RadialThreeDNND_t(1,r/1e3,day,dep0/1e3,1e3);
+eqdens = eqdens*10^(mc); % normalize
 
 t = day*86400;
 Nt = length(t);
