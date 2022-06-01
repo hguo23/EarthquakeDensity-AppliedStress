@@ -93,11 +93,11 @@ figure;hold on
 errorbar(bin,p,p-p_low,p_high-p,bin-binneg,binpos-bin,'.','color',ck);
 scatter(bin,p,30,'MarkerEdgeColor','k','MarkerFaceColor',c,'LineWidth',0.5);
 if strcmp(type,'Pp')
-    xlabel('Pore Pressure (Pa)');
+    xlabel('Pore Pressure [Pa]');
 else
-    xlabel('Poroelastic Stress (Pa)');
+    xlabel('Poroelastic Stress [Pa]');
 end
-ylabel('Earthquake Density (ev/km^3)');    
+ylabel('Normalized Earthquake Density [ev/km^3*day)]');    
 title(name);
 legend(['D = ',num2str(round(D,3)),' : ',num2str(round(means,2)),' +- ',num2str(round((hb-lb)/2),3)]);
 set(gca,'XScale','log','YScale','log','Fontsize',14,'TickDir','out');
