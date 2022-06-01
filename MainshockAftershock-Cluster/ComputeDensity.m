@@ -19,7 +19,8 @@ end
 Rec = rmfield(Rec,'Lat');
 Rec_ori = Rec;
 
-Nboot = 1; % bootstrapping number
+Nboot = 1e3; % bootstrapping number, 1000 in this study
+
 for n = 0 :Nboot-1
     n
     %% load files
