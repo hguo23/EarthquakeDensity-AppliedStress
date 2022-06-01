@@ -51,33 +51,9 @@ for i = 1:Nboot
     Pp = output{:,6}*1e6; % pore pressure
     tau = output{:,7}*1e6; % shear stress
     
-    Isign = tau<0;
     ind(i).eqd = Eqd';
     ind(i).Pp = Pp';    
     ind(i).tau = tau';
-
-    %% method 1
-    sig = Pp;
-    eqd = Eqd;
-    SlopeFit_Pp;
-    ind(i).binPp = binp;
-    ind(i).binPpneg = binpneg;
-    ind(i).binPppos = binppos;
-    ind(i).p_Pp = p;
-    ind(i).p_low_Pp = p_low;
-    ind(i).p_high_Pp = p_high;
-    ind(i).b_Pp = bvec';
-    
-    eqd = Eqd(~Isign);
-    sig = tau(~Isign);
-    SlopeFit_Sig;
-    ind(i).bintau = binp;
-    ind(i).bintauneg = binpneg;
-    ind(i).bintaupos = binppos;
-    ind(i).p_tau = p;
-    ind(i).p_low_tau = p_low;
-    ind(i).p_high_tau = p_high;
-    ind(i).b_tau = bvec';
 end
 save(outstr,'ind');
 
