@@ -11,21 +11,16 @@ for n = 0:Nboot-1
         
     dys = [Rec.dys]; % normalized dynamic stresses
     sts = [Rec.sts]; % static stresses    
-    eqd = [Rec.eqd]; % radial density for static stresses analysis
-    eqdn = [Rec.eqdn]; % radial density for dynamic stresses analysis
-    
-    I = sts>0 & eqd>1e-6;
+    eqd = [Rec.eqd]; % radial density
+   
+    I = sts>0 ;
     sts = sts(I);
-    eqd = eqd(I);
-    
-    I = dys>0 & eqdn>1e-8;
-    dys = dys(I);
-    eqdn = eqdn(I);
-    
+    eqd2 = eqd(I);
+        
     slope(n+1).sts = sts;
     slope(n+1).dys = dys;
-    slope(n+1).eqd = eqd;
-    slope(n+1).eqdn = eqdn;    
+    slope(n+1).eqd1 = eqd;
+    slope(n+1).eqd2 = eqd2;    
 end
 
 %%
@@ -33,16 +28,16 @@ clc
 clearvars -except slope
 sts = [slope.sts];
 dys = [slope.dys]*7.07945784384137^4;
-eqd = [slope.eqd];
-eqdn = [slope.eqdn];
+eqd1 = [slope.eqd1];
+eqd2 = [slope.eqd2];
 
-n = 25;
+n = 16;
 ld = max([round(length(dys)/n),1e3]); 
 sld = ld;
 ls = max([round(length(sts)/n),1e3]); 
 sls = ls;
-[bindp,bindneg,bindpos,p1, p1_low, p1_high,dfe1] = calP_window(dys,eqdn,ld,sld);
-[binsp,binsneg,binspos,p2, p2_low, p2_high,dfe2] = calP_window(sts,eqd,ls,sls);
+[bindp,bindneg,bindpos,p1, p1_low, p1_high,dfe1] = calP_window(dys,eqd1,ld,sld);
+[binsp,binsneg,binspos,p2, p2_low, p2_high,dfe2] = calP_window(sts,eqd2,ls,sls);
      
 %% fit slope
 conf = 90; % confidence interval
@@ -73,5 +68,6 @@ legend([h1 h2],{'dynamic stress','static stress'},'location','southeast');
 set(gca,'XScale','log','YScale','log','Fontsize',14);
 box on; grid on; hold off
 
-figure(3);hist(bvec1)
-figure(4);hist(bvec2)
+%% slope values in 90% confidence interval
+[LB1, UB1] = ConfidenceInter(90,bvec1);
+[LB2, UB2] = ConfidenceInter(90,bvec2);
